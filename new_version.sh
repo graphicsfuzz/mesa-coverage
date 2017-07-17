@@ -1,15 +1,8 @@
 #!/bin/sh
 
-MESA_VERSION="mesa-17.1.4"
-DRM_VERSION="libdrm-2.4.81"
+set -e
 
-#LLVM_INSTALL_PATH="/vol/multicore/llvm-4.0.0"
-LLVM_INSTALL_PATH="$HOME/work/LLVM_4.0.0/install"
-
-WORK_DIR="$HOME/work/MesaBuild"
-INSTALL_DIR="$WORK_DIR/install"
-
-NB_CPU=4
+source .setenv.sh
 
 cat <<EOF
 ********************************************************************
