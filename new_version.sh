@@ -1,8 +1,8 @@
-#!/bin/sh
+#!/bin/bash
 
 set -e
 
-source .setenv.sh
+source setenv.sh
 
 cat <<EOF
 ********************************************************************
@@ -86,6 +86,13 @@ echo "#########################################################################"
 # mesa
 (
     set -e
+
+    if test ! -d mesa
+    then
+        git clone git://anongit.freedesktop.org/git/mesa/mesa
+        ./autogen.sh
+    fi
+
     cd mesa
 
     if test -f LATEST_BUILD -a `cat LATEST_BUILD` = $MESA_VERSION
@@ -97,7 +104,11 @@ echo "#########################################################################"
         git pull
         git checkout $MESA_VERSION
 
-        make clean
+        # There may not be a Makefile on the first run
+        if test -f Makefile
+        then
+            make clean
+        fi
 
         # config with coverage
         CFLAGS="--coverage" \
@@ -121,6 +132,8 @@ echo "#########################################################################"
 
     fi
 )
+
+echo "DONE COMPILING MESA, WILL EXIT"
 
 exit 1
 
