@@ -2,9 +2,24 @@
 
 Instructions on how to obtain code coverage of Mesa.
 
+## Mesa vocabulary
+
 A link to explain Mesa-related vocabulary:
 
 https://www.reddit.com/r/archlinux/comments/6la6n5/trying_to_understand_drm_dri_mesa_radeon_gallium/
+
+## Needed modules
+
+Mesa compilation requires:
+
+1. DRM library libdrm:
+
+```
+$ git clone git://anongit.freedesktop.org/mesa/drm
+$ cd drm
+$ ./autogen.sh --prefix=/data/MesaBuild/install
+$
+```
 
 # Hugues's raw notes:
 

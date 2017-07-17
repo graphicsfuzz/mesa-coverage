@@ -71,8 +71,6 @@ cd $WORK_DIR
     fi
 )
 
-exit 1
-
 echo "#########################################################################"
 echo "# libdrm updated to version $DRM_VERSION"
 echo "#########################################################################"
@@ -80,8 +78,13 @@ echo "#########################################################################"
 # llvm
 
 # Must be already compiled and installed somewhere else. LLVM_INSTALL_PATH
-# should point to the install directory. Prefer relative path in order
-# to make coverage easier.
+# should point to the install directory.
+
+# TO BE CONFIRMED: Prefer relative path in order to make coverage
+# easier.
+
+echo -n "LLVM version: "
+$LLVM_INSTALL_PATH/bin/llvm-config --version
 
 echo "#########################################################################"
 echo "# Using LLVM from path: $LLVM_INSTALL_PATH"
@@ -118,13 +121,15 @@ echo "#########################################################################"
               --with-gallium-drivers=radeonsi \
               --with-vulkan-driver=intel,radeon
 
-        make -j 8
+        make -j $NB_CPU
         make install
 
         echo "$MESA_VERSION" > LATEST_BUILD
 
     fi
 )
+
+exit 1
 
 echo "#########################################################################"
 echo "# mesa updated to version: $MESA_VERSION"
