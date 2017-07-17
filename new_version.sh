@@ -2,14 +2,21 @@
 
 MESA_VERSION="mesa-17.1.4"
 DRM_VERSION="libdrm-2.4.81"
-LLVM_PATH="/vol/multicore/llvm-4.0.0"
-INSTALL_DIR="/data/MesaBuild/install"
+
+#LLVM_INSTALL_PATH="/vol/multicore/llvm-4.0.0"
+LLVM_INSTALL_PATH="$HOME/work/LLVM_4.0.0/install"
+
+WORK_DIR="$HOME/work/MesaBuild"
+INSTALL_DIR="$WORK_DIR/install"
+
+NB_CPU=4
 
 cat <<EOF
 ********************************************************************
 MESA_VERSION: $MESA_VERSION
 DRM_VERSION: $DRM_VERSION
-LLVM_PATH (from mesa dir): $LLVM_PATH
+LLVM_INSTALL_PATH (from mesa dir): $LLVM_INSTALL_PATH
+WORK_DIR: $INSTALL_DIR
 INSTALL_DIR: $INSTALL_DIR
 
 You can update these by editing the script ($0)
@@ -27,6 +34,9 @@ fi
 
 set -e
 
+mkdir -p $WORK_DIR
+cd $WORK_DIR
+
 # drm
 
 # Only update when a new version is announced. Check drm mailing list
@@ -38,6 +48,11 @@ set -e
 
 (
     set -e
+    if test ! -d drm
+    then
+        git clone git://anongit.freedesktop.org/mesa/drm
+    fi
+
     cd drm
 
     if test -f LATEST_BUILD -a `cat LATEST_BUILD` = $DRM_VERSION
@@ -49,12 +64,14 @@ set -e
         git pull
         git checkout $DRM_VERSION
         ./autogen.sh --prefix="$INSTALL_DIR"
-        make -j 7
+        make -j $NB_CPU
         echo "$DRM_VERSION" > LATEST_BUILD
         make install
 
     fi
 )
+
+exit 1
 
 echo "#########################################################################"
 echo "# libdrm updated to version $DRM_VERSION"
@@ -62,12 +79,12 @@ echo "#########################################################################"
 
 # llvm
 
-# Must be already compiled and installed somewhere else. LLVM_PATH
+# Must be already compiled and installed somewhere else. LLVM_INSTALL_PATH
 # should point to the install directory. Prefer relative path in order
 # to make coverage easier.
 
 echo "#########################################################################"
-echo "# Using LLVM from path: $LLVM_PATH"
+echo "# Using LLVM from path: $LLVM_INSTALL_PATH"
 echo "#########################################################################"
 
 # mesa
@@ -92,7 +109,7 @@ echo "#########################################################################"
               LIBS="-lgcov" \
               PKG_CONFIG_PATH=/data/MesaBuild/install/lib/pkgconfig \
               ./configure \
-              --with-llvm-prefix="$LLVM_PATH" \
+              --with-llvm-prefix="$LLVM_INSTALL_PATH" \
               --enable-llvm \
               --prefix="$INSTALL_DIR" \
               --enable-debug \
@@ -155,7 +172,7 @@ cp -d install/lib/*.so* $DEST/
 cp -d install/lib/dri/*.so $DEST/
 (
     cd mesa
-    cp -d $LLVM_PATH/lib/*LLVM*so ../$DEST
+    cp -d $LLVM_INSTALL_PATH/lib/*LLVM*so ../$DEST
 )
 
 cat environ.sh \
