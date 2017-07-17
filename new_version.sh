@@ -133,17 +133,13 @@ echo "#########################################################################"
     fi
 )
 
-echo "DONE COMPILING MESA, WILL EXIT"
-
-exit 1
-
 echo "#########################################################################"
 echo "# mesa updated to version: $MESA_VERSION"
 echo "#########################################################################"
 
 # creates reference for coverage
 
-DEST="/vol/multicore/hevrard/mesa/${MESA_VERSION}_cov_src"
+DEST="${MESA_VERSION}_cov_src"
 if test -d $DEST
 then
     echo "$DEST already exists, no update of source and gcno files"
@@ -159,10 +155,10 @@ else
           --filter='- *' \
           mesa $DEST/
 
-    cp get-coverage-info.sh $DEST/
+    cp scripts/get-coverage-info.sh $DEST/
     chmod ug+x $DEST/get-coverage-info.sh
 
-    cp my_gcov.sh $DEST/
+    cp scripts/my_gcov.sh $DEST/
     (
         cd $DEST
         echo "" >>  my_gcov.sh
@@ -186,9 +182,9 @@ cp -d install/lib/dri/*.so $DEST/
     cp -d $LLVM_INSTALL_PATH/lib/*LLVM*so ../$DEST
 )
 
-cat environ.sh \
+cat scripts/setenv.sh \
     | sed -e 's/@MESA_PACKAGE@/'"$DEST"'/' \
-    > $DEST/environ.sh
+    > $DEST/setenv.sh
 
 rm -rf $DEST.tar
 tar cvf ${DEST}.tar $DEST
