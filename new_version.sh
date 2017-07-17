@@ -2,7 +2,13 @@
 
 set -e
 
-source setenv.sh
+if test ! -f configuration.sh
+then
+    echo "No configuration.sh file found! See configuration.sh.template for an example"
+    exit 1
+fi
+
+source configuration.sh
 
 cat <<EOF
 ********************************************************************
@@ -12,7 +18,7 @@ LLVM_INSTALL_PATH (from mesa dir): $LLVM_INSTALL_PATH
 WORK_DIR: $INSTALL_DIR
 INSTALL_DIR: $INSTALL_DIR
 
-You can update these by editing the script ($0)
+You can update these by editing the configuration.sh
 ********************************************************************
 EOF
 
