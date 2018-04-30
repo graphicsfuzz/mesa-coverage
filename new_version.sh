@@ -96,7 +96,10 @@ echo "#########################################################################"
     if test ! -d mesa
     then
         git clone git://anongit.freedesktop.org/git/mesa/mesa
-        ./autogen.sh
+        (
+            cd mesa
+            ./autogen.sh
+        )
     fi
 
     cd mesa
