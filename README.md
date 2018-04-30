@@ -2,11 +2,16 @@
 
 Instructions on how to obtain code coverage of Mesa.
 
-## Mesa vocabulary
+## How to use the package
 
-A link to explain Mesa-related vocabulary:
+See below to build. To use, you need to export `LD_LIBRARY_PATH` and
+`LIBGL_DRIVER_PATH` like the following:
 
-https://www.reddit.com/r/archlinux/comments/6la6n5/trying_to_understand_drm_dri_mesa_radeon_gallium/
+    MESADIR="$HOME/mesa_2017-01-01_123abc"
+    LD_LIBRARY_PATH="$MESADIR"
+    export LD_LIBRARY_PATH
+    LIBGL_DRIVERS_PATH="$MESADIR"
+    export LIBGL_DRIVERS_PATH
 
 ## Build a new version
 
@@ -23,6 +28,8 @@ This should create a `mesa-<version>_cov.tar` and
 `mesa-<version>_cov_src` folder.
 
 For the compilation flow details, see the `new_version.sh` script internals.
+
+----------------------------------------------------------------------
 
 # Hugues's old raw notes:
 
@@ -129,16 +136,6 @@ which version of each library were used for this build.
     cp -d install/lib/dri/*.so $DEST/
     tar cvf ${DEST}.tar $DEST
 
-# How to use the package
-
-Source a script that refer to the package:
-
-    MESADIR="$HOME/mesa_2017-01-01_123abc"
-    LD_LIBRARY_PATH="$MESADIR"
-    export LD_LIBRARY_PATH
-    LIBGL_DRIVERS_PATH="$MESADIR"
-    export LIBGL_DRIVERS_PATH
-
 # Coverage
 
 When configuring Mesa, set the following environment variables:
@@ -161,13 +158,19 @@ coverage info files. You need to set the following to control this:
 Then move back the files, see:
 http://bobah.net/d4d/tools/code-coverage-with-gcov
 
+## Mesa vocabulary
+
+A link to explain Mesa-related vocabulary:
+
+https://www.reddit.com/r/archlinux/comments/6la6n5/trying_to_understand_drm_dri_mesa_radeon_gallium/
+
 # TODO
 
  - work on profiling
 
-# New version
+ - Refactor to new structure
 
-File structure:
+New file structure:
 
 ```
 /mesa/    mesa sources
